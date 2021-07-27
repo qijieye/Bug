@@ -22,6 +22,8 @@ export class Selector {
 	onSelectedChange(value: HTMLSmoothlyItemElement | undefined, old: HTMLSmoothlyItemElement | undefined) {
 		if (old)
 			old.selected = false
+		if (old == value)
+			this.selectedElement = old
 	}
 	@Watch("filter")
 	async onFilterChange(value: string) {
@@ -41,16 +43,14 @@ export class Selector {
 		this.opened = !this.opened
 		this.open = !this.open
 	}
-	@Listen("itemLoaded")
-	onItemLoaded(event: Event) {
-		this.items.push(event.target as HTMLSmoothlyItemElement)
-	}
+
 	@Listen("itemSelected")
 	onItemSelected(event: Event) {
 		this.selectedElement = event.target as HTMLSmoothlyItemElement
 		if (this.mainElement)
 			this.mainElement.innerHTML = this.selectedElement.innerHTML
-		console.log("selected Element", this.selectedElement.value, this.selectedElement.selected)
+		console.log("innerhtml", this.selectedElement.value)
+		this.selectedElement.value = this.value
 	}
 	@Listen("keydown")
 	onKeyDown(event: KeyboardEvent) {
@@ -96,7 +96,7 @@ export class Selector {
 						style={
 							this.asideError
 								? { backgroundColor: "rgb(var(--smoothly-primary-color))" }
-								: { backgroundColor: "rgb(var(--smoothly-dark-shade)" }
+								: { backgroundColor: "rgb(var(--smoothly-dark-tint))" }
 						}>
 						{this.filter}
 						<button onClick={() => (this.filter = "")}>x</button>
